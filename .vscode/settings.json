@@ -1,0 +1,12 @@
+{
+    "C_Cpp.intelliSenseEngine": "default",
+    "idf.espIdfPath": "/Users/spollack/esp/v5.4/esp-idf",
+    "idf.toolsPath": "/Users/spollack/.espressif",
+    "files.associations": {
+        "*.cps": "javascript",
+        "rmt_tx.h": "c",
+        "rmt_encoder.h": "c"
+    },
+    "idf.port": "/dev/tty.usbserial-0001",
+    "idf.flashType": "UART"
+}
