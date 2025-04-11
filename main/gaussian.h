@@ -10,6 +10,7 @@
 #define _MAIN_GAUSSIAN_H_
 
 double gaussian(double x, float mean, float std_dev);
+float round_to_tenth(float num);
 
 
 #endif/* _MAIN_GAUSSIAN_H_ */

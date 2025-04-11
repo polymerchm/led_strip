@@ -50,9 +50,9 @@ void generate_pulse_profile(void) {
     double std_dev = CONFIG_PULSE_DURATION_FRAMES / 6.0;
     for (int i=0; i < CONFIG_PULSE_DURATION_FRAMES; i++) {
         double x = i - CONFIG_PULSE_DURATION_FRAMES/2;
-        double y = gaussian(x, (double) CONFIG_PULSE_DURATION_FRAMES/2, std_dev);
-        // profile[i] = y;
-        printf("X=%f  Y=%f\n",x,y);
+        double y = gaussian(x, 0.0, std_dev);
+        pulse_profile[i] = y;
+        printf("X=%f  Y=%f\n",x,pulse_profile[i]);
     }
 }
 

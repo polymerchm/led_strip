@@ -5,8 +5,10 @@
     "files.associations": {
         "*.cps": "javascript",
         "rmt_tx.h": "c",
-        "rmt_encoder.h": "c"
+        "rmt_encoder.h": "c",
+        "ratio": "c"
     },
     "idf.port": "/dev/tty.usbserial-120",
-    "idf.flashType": "UART"
+    "idf.flashType": "UART",
+    "idf.portWin": "COM3"
 }
