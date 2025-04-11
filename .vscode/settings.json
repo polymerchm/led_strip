@@ -6,9 +6,10 @@
         "*.cps": "javascript",
         "rmt_tx.h": "c",
         "rmt_encoder.h": "c",
-        "ratio": "c"
+        "ratio": "c",
+        "sdkconfig.h": "c"
     },
-    "idf.port": "/dev/tty.usbserial-120",
+    "idf.port": "/dev/tty.usbserial-0289847D",
     "idf.flashType": "UART",
     "idf.portWin": "COM3"
 }
