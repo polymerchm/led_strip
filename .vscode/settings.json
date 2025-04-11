@@ -7,6 +7,6 @@
         "rmt_tx.h": "c",
         "rmt_encoder.h": "c"
     },
-    "idf.port": "/dev/tty.usbserial-0001",
+    "idf.port": "/dev/tty.usbserial-120",
     "idf.flashType": "UART"
 }

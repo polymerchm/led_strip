@@ -54,3 +54,18 @@ After you seeing this log, you should see a rainbow chasing demonstration patter
 ## Troubleshooting
 
 For any technical queries, please open an [issue] (https://github.com/espressif/esp-idf/issues) on GitHub. We will get back to you soon.
+
+# Sparkle - a 20-NEOPIXEL LED "Fairy Light"
+
+## Premise
+
+This app will program a 20-pixel LED strand to randomly pulse sets of the LEDS with a gaussian intensity profile of a prescribed std-dev at varying start times.
+
+The "pulses" are all contained within the total "repeat time" by preventing a median from being any closer to the start or end than 3 std_devs.
+
+Once a pattern is stored, its is lopped over 5-10 times (using the RMT hardware) wWhile a new pattern is being created.  When the new "image" is ready, it will stop the loop and restart with the new page.
+
+
+### Future
+
+Other patterns triggered by a touch switch

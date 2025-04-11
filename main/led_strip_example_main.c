@@ -9,6 +9,8 @@
 #include "esp_log.h"
 #include "driver/rmt_tx.h"
 #include "led_strip_encoder.h"
+#include "math.h"
+
 
 #define RMT_LED_STRIP_RESOLUTION_HZ 10000000 // 10MHz resolution, 1 tick = 0.1us (led strip needs a high resolution)
 #define RMT_LED_STRIP_GPIO_NUM      13
@@ -79,6 +81,7 @@ void app_main(void)
     uint32_t blue = 0;
     uint16_t hue = 0;
     uint16_t start_rgb = 0;
+
 
     ESP_LOGI(TAG, "Create RMT TX channel");
     rmt_channel_handle_t led_chan = NULL;
