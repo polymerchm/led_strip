@@ -8,16 +8,19 @@ menu "LED Strip"
         int
         prompt "Total Pulse Dration (frames)"
         default 21
+        help
+          Enter an odd number
 
     config  SPARKLE_TIME_FRAMES
         int
         prompt "Number of Time Slices"
         default 1000
-    
-    config  SPARKLE_TIME_PER_PULSE
+
+    config SPARKLE_TIME_PER_FRAME
         int
-        prompt "Times per Pulse (ms)"
-        default 50
+        prompt "Time in ms per frame"
+        default 20
+
 
     config  SPARKLE_RMT_LED_STRIP_GPIO_NUM
         int
