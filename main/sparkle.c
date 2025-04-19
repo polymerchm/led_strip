@@ -86,6 +86,8 @@ void start_buffer_build(uint8_t buffer_index)
     // }
 
     int num_to_pulse = random_in_range(CONFIG_SPARKLE_NUM_PIXELS * 2 / 3, 1, &idum);
+    ESP_LOGI(TAG, "%d LED to program", num_to_pulse);
+
 
     // range of time frames ( corrected for leadig or trailing edge of the pulses)
     uint8_t min_frame = (CONFIG_SPARKLE_PULSE_DURATION_FRAMES - 1) / 2;
@@ -154,17 +156,18 @@ void display_buffers_task(void *pv) {
     uint32_t buffer_index;
     uint64_t start_time;
     uint64_t end_time;
+    ESP_LOGI(TAG, "starting display task");
     for(;;) {
             //wait here for a message to display a buffer
             xTaskNotifyWait(0,0, &buffer_index, portMAX_DELAY); 
             // before displaying, tell the build to switch to the other buffer
             xTaskNotify(build_handle, buffer_index == 0 ? 1 : 0, eNoAction);
             start_time = esp_timer_get_time();
-            // display_next_buffer(buffer_number);
+            display_next_buffer(buffer_index);
             end_time = esp_timer_get_time(); 
-            printf("Time to display the full clip is %lld ms", (end_time - start_time));
-            printf("displaying buffer %ld", buffer_index);
-            vTaskDelay(3000/portTICK_PERIOD_MS); 
+            printf("Time to display the full clip is %lld ms\n", (end_time - start_time)/1000);
+            printf("displaying buffer %ld\n", buffer_index);
+           
         }   // tell build done with buffer
 
     
@@ -175,19 +178,19 @@ void build_next_buffer_task(void *pv) {
     uint32_t buffer_index;
     uint64_t start_time;
     uint64_t end_time;
+    ESP_LOGI(TAG,"Starting Build Task");
     for(;;) {
         // wait for where to build next buffer
         xTaskNotifyWait(0,0, &buffer_index, portMAX_DELAY);
         // build the new image
         start_time = esp_timer_get_time();
-        // start_buffer_build(buffer_index);
+        start_buffer_build(buffer_index);
         end_time = esp_timer_get_time();
-        printf("Time to fill a buffer is %lld ms ", (end_time - start_time));
-        printf("building buffer %ld", buffer_index);
-        vTaskDelay(1000/portTICK_PERIOD_MS); 
-        // done, notify the dispay to display it
+        printf("Time to fill a buffer is %lld ms\n", (end_time - start_time)/1000);
+        printf("built the buffer %ld\n", buffer_index);
+        ESP_LOGI(TAG,"notify display task");
         xTaskNotify(display_handle, buffer_index, eNoAction) ;
-        // 
+        
 
     }
 
@@ -214,31 +217,28 @@ void app_main(void)
     next_display_p = NULL;
     next_build_p = buffer;
  
-    xTaskCreatePinnedToCore(
+    xTaskCreate(
         build_next_buffer_task, 
         "build", 
         CONFIG_SPARKLE_BUILD_STACK_DEPTH, 
-        (void *) next_build_p, 
+        NULL, 
         0,  
-        &build_handle,
-        1 // processor
+        &build_handle
         );
 
-    xTaskCreatePinnedToCore(
+    xTaskCreate(
         display_buffers_task, 
         "display",
          CONFIG_SPARKLE_DISPLAY_STACK_DEPTH, 
-         (void *) next_display_p,
-         0, // priority
-         &display_handle, 
-         0  // processor
+         NULL,
+         1, // priority
+         &display_handle
         );
 
     xTaskNotify(build_handle, 0, eNoAction); // initial build of the first buffer
 
 
    
-    
 
     // // this will be a task on cpu0
     // display_next_buffer(next_buffer_p, led_chan, led_encoder, &tx_config);
