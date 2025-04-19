@@ -32,5 +32,16 @@ menu "LED Strip"
         prompt "RMT RESOLUTION"
         default 10000000
 
+    config SPARKLE_BUILD_STACK_DEPTH
+        int
+        prompt "Build Task Stack Depth"
+        default 512
+
+    config SPARKLE_DISPLAY_STACK_DEPTH
+        int
+        prompt "Display Task Stack Depth"
+        default 1024
+
+
 endmenu
     
