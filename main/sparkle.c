@@ -22,10 +22,13 @@
 #include "esp_mac.h"
 #include "esp_check.h"
 #include "driver/rmt_tx.h"
+#include "esp_timer.h"
+
 #include "led_strip_encoder.h"
+
 #include "gaussian.h"
 #include "ran0.h"
-#include "esp_timer.h"
+#include "color_print_utils.h"
 
 /**
  * setup constants

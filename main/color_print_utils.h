@@ -63,6 +63,7 @@ Background
 #define A_ITALIC 3
 #define A_UNDERLINE 4
 
+
 /**
  * @brief return appropriate foreground code
  * 
@@ -99,7 +100,7 @@ void get_ansi_codes(int style, int foreground, int background, char *out);
  * @param background an integer between 40-47, if -1, ignore
 
  */
- void print_ansi_codes(int style, int foreground, int background);
+ void printf_ansi_codes(int style, int foreground, int background);
 
  
 

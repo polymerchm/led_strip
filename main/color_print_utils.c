@@ -9,6 +9,9 @@
  * 
  */
 
+#include <stdio.h>
+#include <stdarg.h>
+
  int FG(int val) {
     return 30 + val;
 
@@ -36,9 +39,13 @@ void get_ansi_codes(int style, int foreground, int background, char *out){
     sprintf(out + strlen(out), 'm');
 }
 
-void print_ansi_codes(int style, int foreground, int background){
-    char buffer[128]; // hope this is big enough
+void printf_ansi_codes(int style, int foreground, int background){
+    char buffer[12]; // hope this is big enough
     get_ansi_codes(style, foreground, background, buffer);
     printf(buffer);
 }
+
+
+
+
 
