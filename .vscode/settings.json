@@ -7,9 +7,12 @@
         "rmt_tx.h": "c",
         "rmt_encoder.h": "c",
         "ratio": "c",
-        "sdkconfig.h": "c"
+        "sdkconfig.h": "c",
+        "__locale": "c",
+        "ios": "c",
+        "format": "c"
     },
-    "idf.port": "/dev/tty.usbserial-0289847D",
+    "idf.port": "/dev/tty.SLAB_USBtoUART",
     "idf.flashType": "UART",
     "idf.portWin": "COM3"
 }

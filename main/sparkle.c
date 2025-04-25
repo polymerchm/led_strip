@@ -43,9 +43,6 @@ long idum = 12311451; // seed for the ran0()
 TaskHandle_t display_handle = NULL;
 TaskHandle_t build_handle = NULL;
 
-
-
- 
 /**
  * globals for tasks
  */
@@ -81,11 +78,9 @@ void start_buffer_build(uint8_t buffer_index)
      *  density: fraction of pixels to populate with a pulse
      */
     memset(buffer_start, 0, sizeof(buffer)/2);
-    // for (int i=0; i < CONFIG_SPARKLE_NUM_PIXELS; i++) {
-    //     memset(peaks[i].values, 0, CONFIG_SPARKLE_PULSE_DURATION_FRAMES);
-    // }
+ 
 
-    int num_to_pulse = random_in_range(CONFIG_SPARKLE_NUM_PIXELS * 2 / 3, 1, &idum);
+    int num_to_pulse = random_in_range((int)(CONFIG_SPARKLE_NUM_PIXELS * 0.666), 1, &idum);
     ESP_LOGI(TAG, "%d LED to program", num_to_pulse);
 
 
@@ -98,19 +93,21 @@ void start_buffer_build(uint8_t buffer_index)
     uint8_t pulse_max;           // the maximum of the pulse
     float std_dev;               // the std-dev of the pulse;
     uint8_t pulse_index;         // pointer to the frame this peak's time corresponds to
-    uint8_t std_dev_min = CONFIG_SPARKLE_PULSE_DURATION_FRAMES / 12,
-            std_dev_max = CONFIG_SPARKLE_PULSE_DURATION_FRAMES / 6;
+    uint8_t std_dev_min = (int) CONFIG_SPARKLE_PULSE_DURATION_FRAMES / 10.0,
+            std_dev_max = (int) CONFIG_SPARKLE_PULSE_DURATION_FRAMES / 6.0;
     uint8_t next_level;
     int offset;
-
+    
+    printf("std-dev range %d-%d\n", std_dev_max, std_dev_min);
     for (int i = 0; i < num_to_pulse; i++)
     {
         led_num = (uint8_t)random_in_range(CONFIG_SPARKLE_NUM_PIXELS - 1, 0, &idum);
         pulse_center_frame = random_in_range(max_frame, min_frame, &idum); // this creates the time offset
         pulse_index = pulse_center_frame - min_frame - 1;
-
         pulse_max = random_in_range(255, 60, &idum); // between 255 and 60 (100% and 24% max intensity)
         std_dev = random_in_range(std_dev_max, std_dev_min, &idum);
+        printf("Pulse on LED %d, midframe in  %d, max %d, std_dev %f\n", led_num,
+        pulse_center_frame, pulse_max, std_dev);
 
         for (int frame_index = 0; frame_index < CONFIG_SPARKLE_PULSE_DURATION_FRAMES; frame_index++)
         {
@@ -119,6 +116,7 @@ void start_buffer_build(uint8_t buffer_index)
             next_level = (uint8_t)(gaussian((float)pulse_index,
                                             (float)pulse_center_frame, std_dev) *
                                    pulse_max);
+            printf("%d : %d ",offset, next_level);
             uint8_t old_value = *(buffer_start + offset);
             if (old_value == 0)
             {
@@ -128,14 +126,16 @@ void start_buffer_build(uint8_t buffer_index)
             {
                 // if two are close in time, could cause a hicough, average
                 memset(buffer_start + offset, (next_level + old_value) / 2, 3);
-                pulse_index++; // next position along the gaussian pulse profile (in time)
             }
+            pulse_index++;
         }
+        printf("\n");
     }                           
 }
 
 void display_next_buffer(uint32_t buffer_index) {
     // display this buffer
+    ESP_LOGI(TAG, "offset of next buffer is %ld", buffer_index * sizeof(buffer)/2);
     uint8_t *frame_p = &buffer[0] + buffer_index * sizeof(buffer)/2;
     // wait(bufferEmpty)
     for (int i=0; i < CONFIG_SPARKLE_TIME_FRAMES; i++) {
@@ -159,14 +159,18 @@ void display_buffers_task(void *pv) {
     ESP_LOGI(TAG, "starting display task");
     for(;;) {
             //wait here for a message to display a buffer
-            xTaskNotifyWait(0,0, &buffer_index, portMAX_DELAY); 
-            // before displaying, tell the build to switch to the other buffer
-            xTaskNotify(build_handle, buffer_index == 0 ? 1 : 0, eNoAction);
-            start_time = esp_timer_get_time();
-            display_next_buffer(buffer_index);
-            end_time = esp_timer_get_time(); 
-            printf("Time to display the full clip is %lld ms\n", (end_time - start_time)/1000);
-            printf("displaying buffer %ld\n", buffer_index);
+
+            if (xTaskNotifyWait(0,0, &buffer_index, portMAX_DELAY) == pdTRUE) {
+                printf("afert the first wait in display, the buffer index is %ld\n", buffer_index);            // before displaying, tell the build to switch to the other buffer
+                xTaskNotify(build_handle, (buffer_index == 0 ? 1 : 0), eSetValueWithOverwrite);
+                start_time = esp_timer_get_time();
+                display_next_buffer(buffer_index);
+                end_time = esp_timer_get_time(); 
+                printf("Time to display the full clip is %lld ms\n", (end_time - start_time)/1000);
+                printf("displaying buffer %ld\n", buffer_index);
+            } else {
+                ESP_LOGD(TAG, "xTaskNotifyWait timed out in display_buffer_task");
+            }
            
         }   // tell build done with buffer
 
@@ -181,7 +185,9 @@ void build_next_buffer_task(void *pv) {
     ESP_LOGI(TAG,"Starting Build Task");
     for(;;) {
         // wait for where to build next buffer
-        xTaskNotifyWait(0,0, &buffer_index, portMAX_DELAY);
+        if (xTaskNotifyWait(0,0, &buffer_index, portMAX_DELAY) == pdTRUE) {
+        printf("enterning build, buffer_index is %ld\n", buffer_index);
+
         // build the new image
         start_time = esp_timer_get_time();
         start_buffer_build(buffer_index);
@@ -189,9 +195,10 @@ void build_next_buffer_task(void *pv) {
         printf("Time to fill a buffer is %lld ms\n", (end_time - start_time)/1000);
         printf("built the buffer %ld\n", buffer_index);
         ESP_LOGI(TAG,"notify display task");
-        xTaskNotify(display_handle, buffer_index, eNoAction) ;
-        
-
+        xTaskNotify(display_handle, buffer_index, eSetValueWithOverwrite);
+        } else {
+            ESP_LOGD(TAG, "xTaskNotifyWait timed out in build_next_buffer_task");
+        }
     }
 
 }
@@ -235,7 +242,7 @@ void app_main(void)
          &display_handle
         );
 
-    xTaskNotify(build_handle, 0, eNoAction); // initial build of the first buffer
+    xTaskNotify(build_handle, 0, eSetValueWithOverwrite); // initial build of the first buffer
 
 
    
