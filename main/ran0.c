@@ -55,7 +55,7 @@ double random_double_in_range(double a, double b, long *seed)
         max = a;
         min = b;
     }
-    return (double)(max - min) * ran0(seed) + min;
+    return (double)((max - min) * ran0(seed) + min);
 }
 
 int random_int_in_range(int a, int b, long *seed)
@@ -71,7 +71,7 @@ int random_int_in_range(int a, int b, long *seed)
         max = a;
         min = b;
     }
-    return (int)(max - min) * ran0(seed) + min;
+    return (int)((max - min) * ran0(seed)) + min;
 }
 uint8_t random_uint8_in_range(uint8_t a, uint8_t b, long *seed) 
 {
@@ -86,7 +86,7 @@ uint8_t random_uint8_in_range(uint8_t a, uint8_t b, long *seed)
         max = a;
         min = b;
     }
-    return (uint8_t)(max - min) * ran0(seed) + min;
+    return (uint8_t)((max - min) * ran0(seed) + min);
 }
 uint16_t random_uint16_in_range(uint16_t a, uint16_t b, long *seed) 
 {
@@ -101,7 +101,7 @@ uint16_t random_uint16_in_range(uint16_t a, uint16_t b, long *seed)
         max = a;
         min = b;
     }
-    return (uint16_t)(max - min) * ran0(seed) + min;
+    return (uint16_t)((max - min) * ran0(seed) + min);
 }
 uint32_t random_uint32_in_range(uint32_t a, uint32_t b, long *seed)
 { 
@@ -116,5 +116,5 @@ uint32_t random_uint32_in_range(uint32_t a, uint32_t b, long *seed)
         max = a;
         min = b;
     }
-    return (uint32_t)(max - min) * ran0(seed) + min;
+    return (uint32_t)((max - min) * ran0(seed) + min);
 }

@@ -12,7 +12,13 @@
  * 
  */
 
- /*
+ 
+
+
+#ifndef __COLOR_PRINT_UTILS_H__
+#define __COLOR_PRINT_UTILS_H__
+
+/*
 \e[<style>;<color>m
 
 Styles
@@ -63,6 +69,8 @@ Background
 #define A_ITALIC 3
 #define A_UNDERLINE 4
 
+#define A_NULL -1
+
 
 /**
  * @brief return appropriate foreground code
@@ -100,14 +108,18 @@ void get_ansi_codes(int style, int foreground, int background, char *out);
  * @param background an integer between 40-47, if -1, ignore
 
  */
- void printf_ansi_codes(int style, int foreground, int background);
-
+ void print_ansi_codes(int style, int foreground, int background);
  
+#define PRINT_COLOR(c,...) do  { \
+    print_ansi_codes(A_NULL, c, A_NULL); \
+    printf(__VA_ARGS__); \
+    print_ansi_codes(A_NULL, A_WHITE, A_NULL); \
+} while  (0);
 
-
-
-#ifndef __COLOR_PRINT_UTILS_H__
-#define __COLOR_PRINT_UTILS_H__
-
+#define PRINT_COLOR_STYLE(c,s,...) do  { \
+    print_ansi_codes(s, c, A_NULL); \
+    printf(__VA_ARGS__); \
+    print_ansi_codes(0, A_WHITE, A_NULL); \
+} while  (0);
 
 #endif /* __COLOR_PRINT_UTILS_H__ */
