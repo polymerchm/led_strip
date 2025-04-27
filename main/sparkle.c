@@ -4,7 +4,7 @@
  * sparkle.c
  *
  *  This is the main routine for programming the 20 elements NEOPIXEL strip to look like
- *  "fairy lights"
+ *  "fairy lights" or fireflies.
  *
  * Author: spollack
  * Date: 2025-04-09 19:05:20
@@ -71,7 +71,7 @@ void start_buffer_build(uint8_t buffer_index)
     memset(&buffer[buffer_index], 0, sizeof(buffer)/2);
  
 
-    int num_to_pulse = random_in_range(CONFIG_SPARKLE_NUM_PIXELS*0.66, 3*CONFIG_SPARKLE_NUM_PIXELS, &idum);
+    int num_to_pulse = random_in_range(2*CONFIG_SPARKLE_NUM_PIXELS, 5*CONFIG_SPARKLE_NUM_PIXELS, &idum);
 
 
     // range of time frames ( corrected for leadig or trailing edge of the pulses)
@@ -138,7 +138,6 @@ void display_buffers_task(void *pv) {
     uint32_t long_buffer_index;
     uint64_t start_time;
     uint64_t end_time;
-    PRINT_COLOR(A_CYAN,"Starting display task\n");
     for(;;) {
             //wait here for a message to display a buffer
 
