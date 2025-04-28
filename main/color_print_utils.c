@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
+#include "color_print_utils.h"
 
 static int FG(int val) {
     return 30 + val;
@@ -24,16 +25,16 @@ static int BG(int val) {
 
 void get_ansi_codes(int style, int foreground, int background, char *out){
     sprintf(out,"\x1B[");
-    if (style != -1) {
+    if (style != A_NULL) {
         sprintf(out + strlen(out), "%d;", style);
     }
-    if (foreground != -1) {
+    if (foreground != A_NULL) {
         sprintf(out + strlen(out), "%d;", FG(foreground));
     }
-    if (background != -1) {
+    if (background != A_NULL) {
         sprintf(out + strlen(out), "%d;", BG(background));
     }
-    // remove trailing ";" is present
+    // remove trailing ";" if present
     if (out[strlen(out) - 1] == ';') {
         out[strlen(out) - 1] = '\0';
     }

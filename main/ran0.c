@@ -73,6 +73,22 @@ int random_int_in_range(int a, int b, long *seed)
     }
     return (int)((max - min) * ran0(seed)) + min;
 }
+
+int random_long_in_range(long a, long b, long *seed)
+{
+    int max, min;
+    if (a < b)
+    {
+        max = b;
+        min = a;
+    }
+    else
+    {
+        max = a;
+        min = b;
+    }
+    return (long)((max - min) * ran0(seed)) + min;
+}
 uint8_t random_uint8_in_range(uint8_t a, uint8_t b, long *seed) 
 {
     uint8_t max, min;
@@ -88,6 +104,7 @@ uint8_t random_uint8_in_range(uint8_t a, uint8_t b, long *seed)
     }
     return (uint8_t)((max - min) * ran0(seed) + min);
 }
+
 uint16_t random_uint16_in_range(uint16_t a, uint16_t b, long *seed) 
 {
     uint16_t max, min;

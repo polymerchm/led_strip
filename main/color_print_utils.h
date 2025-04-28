@@ -18,8 +18,10 @@
 #ifndef __COLOR_PRINT_UTILS_H__
 #define __COLOR_PRINT_UTILS_H__
 
-/*
-\e[<style>;<color>m
+/* reference 
+
+\<e>[<style>;<foreground>;<background>m
+where e is escape = x1B or 27
 
 Styles
 
@@ -92,16 +94,16 @@ static int BG(int val);
 /**
  * @brief return an an ascii sequence  
  * 
- * @param style an integer between 0-4.   If -1, ignore
- * @param foreground an interger beween 30-37, if -1, ignore
- * @param background an integer between 40-47, if -1, ignore
+ * @param style an integer between 0-4.   If A_NULL, ignore
+ * @param foreground an interger beween 30-37, if A_NULL, ignore
+ * @param background an integer between 40-47, if A_NULL, ignore
  * @param out char string to return results to.
  */
 
 void get_ansi_codes(int style, int foreground, int background, char *out);
 
 /**
- * @brief print andi codes to stdout 
+ * @brief print ANSI codes to stdout 
  * 
  * @param style an integer between 0-4.   If -1, ignore
  * @param foreground an interger beween 30-37, if -1, ignore
