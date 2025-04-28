@@ -1,3 +1,25 @@
+# Sparkle - a 20-NEOPIXEL LED "Firefly" Lights
+
+## Summary
+
+This app will program a 20-pixel LED strand to randomly pulse sets of the LEDS with a gaussian intensity profile of a prescribed std-dev at varying start times.
+
+The "pulses" are all contained within the total "repeat time" by preventing a median from being any closer to the start or end than 3 std_devs.
+
+There are two tasks, one for building the sequences of intensities
+on all of the LEDS and one to display the LEDS. The build task runs on CPU0 and the Display task runs on CPU1.   They coordinate using the xTaskNotify and xTaskNotifyWait functions.
+
+Once a pattern is stored, it is displayed (using the RMT hardware) while the next pattern is created   When the new "image" is ready, it will signal the display task to use it.    The display task signals the build task to generate the next pattern in the other buffer.
+
+20 NEOPIXELS is about the limit for an ESP32 WROOM-32e (uses 75% of memory).
+
+
+### Future
+
+Other patterns triggered by a touch switch
+
+## Based on the following.
+
 | Supported Targets | ESP32 | ESP32-C3 | ESP32-C5 | ESP32-C6 | ESP32-H2 | ESP32-P4 | ESP32-S2 | ESP32-S3 |
 | ----------------- | ----- | -------- | -------- | -------- | -------- | -------- | -------- | -------- |
 # RMT Transmit Example -- LED Strip
@@ -55,17 +77,3 @@ After you seeing this log, you should see a rainbow chasing demonstration patter
 
 For any technical queries, please open an [issue] (https://github.com/espressif/esp-idf/issues) on GitHub. We will get back to you soon.
 
-# Sparkle - a 20-NEOPIXEL LED "Fairy Light"
-
-## Premise
-
-This app will program a 20-pixel LED strand to randomly pulse sets of the LEDS with a gaussian intensity profile of a prescribed std-dev at varying start times.
-
-The "pulses" are all contained within the total "repeat time" by preventing a median from being any closer to the start or end than 3 std_devs.
-
-Once a pattern is stored, its is lopped over 5-10 times (using the RMT hardware) wWhile a new pattern is being created.  When the new "image" is ready, it will stop the loop and restart with the new page.
-
-
-### Future
-
-Other patterns triggered by a touch switch
