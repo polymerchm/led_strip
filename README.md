@@ -1,4 +1,4 @@
-# Sparkle - a 20-NEOPIXEL LED "Firefly" Lights
+# Sparkle - a 20-NEOPIXEL LED "Firefly" Light Strand
 
 ## Summary
 
