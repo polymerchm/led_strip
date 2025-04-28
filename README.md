@@ -26,4 +26,4 @@ Other patterns triggered by a touch switch
 
 ## Bonus
 
-There are "utilities" for producing  numbers in ranges of varying types using "generics" in the ran0.c file and tools for printing to the terminal with ANSI styles and colors in the color-print-utils.c files.   The latter is handy for flagging outputs from multiple tasks.
+There are "utilities" for producing  numbers in ranges of varying types using "generics" in the ran0.c file and tools for printing to the terminal with ANSI styles and colors in the color_print_utils.c files.   The latter is handy for flagging outputs from multiple tasks.
