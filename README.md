@@ -17,7 +17,7 @@ on all of the LEDS and one to display the LEDS. The build task runs on CPU0 and 
 
 Once a pattern is stored, the display task is told to display it  (using the RMT hardware) while the next pattern is created. When the new pattern is ready, the build task will signal the display task to use it. The display task signals the build task to generate the next pattern in the other buffer when it is through with its buffer.
 
-20 NEOPIXELS is about the limit for an ESP32 WROOM-32E (uses 75% of memory).  By changing the frame number SPARKLE_TIME_FRAMES using for config editor of ESP-IDF, you can use less memory, but you "cycles" will be shorter.   
+20 NEOPIXELS is about the limit for an ESP32 WROOM-32E (uses 75% of memory).  By changing the frame number SPARKLE_TIME_FRAMES, using for config editor of ESP-IDF, you can use less memory, but your "cycles" will be shorter.   
 
 
 ### Future
